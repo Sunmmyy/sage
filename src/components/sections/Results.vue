@@ -224,8 +224,8 @@ const tableRowClassName = ({ row }) => {
                 <el-col :xs="24" :sm="24" :md="12">
                   <div class="text-center rl-image-container p-4 border rounded-lg shadow-sm bg-white">
                     <h4 class="font-bold text-lg mb-3 text-gray-800 border-b pb-2">Training Curve on Open Drawer Task. </h4>
-                    <a href="/images/exp1.png" target="_blank" rel="noreferrer" class="block hover:opacity-90 transition">
-                      <el-image src="/images/exp1.png" fit="cover" class="rounded-md border image-zoom-effect" />
+                    <a href="./images/exp1.png" target="_blank" rel="noreferrer" class="block hover:opacity-90 transition">
+                      <el-image src="./images/exp1.png" fit="cover" class="rounded-md border image-zoom-effect" />
                     </a>
                     
                   </div>
@@ -234,8 +234,8 @@ const tableRowClassName = ({ row }) => {
                 <el-col :xs="24" :sm="24" :md="12">
                   <div class="text-center rl-image-container p-4 border rounded-lg shadow-sm bg-white">
                     <h4 class="font-bold text-lg mb-3 text-gray-800 border-b pb-2">Final Success Rates on Six Challenging Manipulation Tasks</h4>
-                    <a href="/images/exp2.png" target="_blank" rel="noreferrer" class="block hover:opacity-90 transition">
-                      <el-image src="/images/exp2.png" fit="cover" class="rounded-md border image-zoom-effect" />
+                    <a href="./images/exp2.png" target="_blank" rel="noreferrer" class="block hover:opacity-90 transition">
+                      <el-image src="./images/exp2.png" fit="cover" class="rounded-md border image-zoom-effect" />
                     </a>
                    
                   </div>

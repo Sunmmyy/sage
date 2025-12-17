@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 // 视频基础路径（不带尾部斜杠），例如：/video
-const videoPath = '/video'
+const videoPath = './video'
 
 // 列表：文件名 + 显示标题 + 说明
 const videos = [
