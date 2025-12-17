@@ -1,45 +1,61 @@
 <script lang="ts" setup>
+// icons removed per request
 
-import { ElIcon } from 'element-plus'
-import { Document, Files, MagicStick, Picture, DataAnalysis, Film } from '@element-plus/icons-vue'
-
-// logo地址，没有则置为""即可
-const logo = './logo.png'
+// logo地址，已根据要求置为""
+const logo = ''
 
 // 标题
-const title = 'Academic Project Page Template'
+const title = 'Explicit Spatial Guidance from Object-Centric Concept Analysis for Vision-Language-Action Model Fine-Tuning'
 
 // 标题颜色
-const title_color = '#000000'
+const title_color = '#1f2937' // 更深的颜色，突出标题
 
 // 标题补充，没有则置为''即可
-const title_supp = ' (Vue based)'
+const title_supp = ''
 
 // 标题补充颜色
-const title_supp_color = '#42B883'
+const title_supp_color = '#3b82f6' // 蓝色调
 
-// 按钮颜色
+// 按钮颜色 (现在主要由 Element Plus 的 Plain/Primary 控制)
 const btn_color = '#444444'
 
 // 作者清单（包含作者姓名、头像、主页、地址序号）
 const authors = [
   {
-    name: "Your Name",
-    icon: "./icon/junyaohu.jpg",
-    homepage: "https://junyaohu.github.io/",
-    address_flag: "1,#"
+    name: "Mingyang Sun",
+    address_flag: "1,4",
+    is_corresponding: false,
+    // is_equal: true // 假设 Mingyang Sun 是共一
   },
   {
-    name: "Anya Forger",
-    icon: "./icon/anya.jpg",
-    homepage: "https://www.bilibili.com/video/BV1jv4y1P7Bb",
-    address_flag: "2,#"
+    name: "Qichen He",
+    address_flag: "2,4",
+    is_corresponding: false,
+    // is_equal: true // 假设 Qichen He 是共一
   },
   {
-    name: "BugCat Capoo",
-    icon: "./icon/capoo.webp",
-    homepage: "https://zh.moegirl.org.cn/%E7%8C%AB%E7%8C%AB%E8%99%AB%E5%92%96%E6%B3%A2",
-    address_flag: "1,*"
+    name: "Xiujian Liang",
+    address_flag: "3,4",
+    is_corresponding: false,
+    is_equal: false
+  },
+  {
+    name: "Donglin Wang",
+    address_flag: "1",
+    is_corresponding: false,
+    is_equal: false
+  },
+  {
+    name: "Cewu Lu",
+    address_flag: "2,4",
+    is_corresponding: false,
+    is_equal: false
+  },
+  {
+    name: "Jianhua Sun",
+    address_flag: "2",
+    is_corresponding: true, // 假设 Jianhua Sun 是通讯作者
+    is_equal: false
   },
 ]
 
@@ -47,271 +63,231 @@ const authors = [
 const addresses = [
   {
     address_flag: "1",
-    name: "Home University",
-    icon: "./icon/home.png",
-    homepage: "https://github.com/hmuniversity"
+    name: "Westlake University",
   },
   {
     address_flag: "2",
-    name: "IKUN University",
-    icon: "./icon/ikun.avif",
-    homepage: "https://www.bilibili.com/video/BV178411Y7QB"
+    name: "Shanghai Jiao Tong University",
+  },
+  {
+    address_flag: "3",
+    name: "Fudan University",
+  },
+  {
+    address_flag: "4",
+    name: "Shanghai Innovation Institute",
   },
 ]
 
 // 共一和通讯提示
+// 调整逻辑，根据作者列表自动生成上标
+const getSuperscript = (author) => {
+    let sup = author.address_flag ? author.address_flag : '';
+    if (author.is_equal) {
+        sup += '#';
+    }
+    if (author.is_corresponding) {
+        sup += '*';
+    }
+    return sup;
+}
+
 const con_and_corresponding_author = 
   "#: Equal Contribution. *: Corresponding Author."
-
-// 最新消息
-const news = "🔥 [2024-12-15] This template project is still under development."
-
-// 强调内容
-const emphases = [
-  "🎉 [ABCD 2024] Poster",
-  "🥰 欢迎关注“减论”微信公众号/B站/知乎/小红书",
-  "传递人工智能算法科普教育的减约理解",
-  "提升信息效率及认知维度"
-]
 
 // 提供引导资料链接
 const buttons = [
   {
-    disabled: true,
+    disabled: false,
     name: "Paper",
-    component: Document,
-  },
-  {
-    disabled: true,
-    name: "中译版",
-    component: Document,
+    link: "#", // 占位链接
   },
   {
     disabled: false,
     name: "Code",
     link: "https://github.com/JunyaoHu/academic-project-page-template-vue",
-    component: Files,
-  },
-  {
-    disabled: false,
-    name: "Demo",
-    link: "https://junyaohu.github.io/academic-project-page-template-vue",
-    component: MagicStick,
-  },
-  {
-    disabled: true,
-    name: "Poster",
-    component: Picture,
-  },
-  {
-    disabled: true,
-    name: "Slide",
-    component: DataAnalysis,
-  },
-  {
-    disabled: false,
-    name: "Video (减论)",
-    link: "https://www.bilibili.com/video/BV15XkgYiE73/",
-    component: Film,
-  },
-  {
-    disabled: false,
-    name: "Video (Tutorial)",
-    link: "https://www.bilibili.com/video/BV1oUrfYzEqZ",
-    component: Film,
   },
 ]
+
+// 最新消息 (保留，但使用更现代的 ElTag 样式)
+const news = "🔥 [2024-12-15] This template project is still under development."
 
 </script>
 
 <template>
-  <div>
-
-    <!-- 最新消息提示 -->
+  <div class="hero">
+    <div class="hero-overlay"></div>
     <el-row justify="center">
-      <el-col :span="24">
-        <el-alert title="🔥 This template is still under development." type="success" />
+      <el-col :xs="24" :sm="22" :md="20" :lg="16" :xl="14">
+        <div class="hero-inner text-center">
+          
+          <div class="title-wrap">
+            <h1 class="paper-title">
+              <span v-if="title" :style="{color:title_color}"> {{ title }}</span>
+            </h1>
+            <p v-if="title_supp" class="title-supp" :style="{color:title_supp_color}">{{ title_supp }}</p>
+          </div>
+
+          <div class="authors-list">
+            <template v-for="(author, idx) in authors" :key="author.name">
+              <span class="author-name">
+                {{ author.name }}
+                <sup v-if="author.address_flag || author.is_equal || author.is_corresponding" class="name_sup">{{ getSuperscript(author) }}</sup>
+              </span>
+              <span v-if="idx < authors.length - 1" class="author-separator">,</span>
+            </template>
+          </div>
+
+          <div class="addresses" v-if="addresses && addresses.length">
+            <template v-for="addr in addresses" :key="addr.address_flag">
+              <el-tag class="address-tag" size="small" type="info"> 
+                <sup class="address_sup">{{ addr.address_flag }}</sup> {{ addr.name }}
+              </el-tag>
+            </template>
+          </div>
+
+          <!-- <p class="con-cor text-gray-500 font-medium">{{ con_and_corresponding_author }}</p>
+           -->
+          <!-- <el-divider class="divider-thin" />
+
+          <div class="actions">
+            <a v-for="button in buttons" :key="button.name" :href="button.link || '#'" target="_blank">
+              <el-button size="large" :disabled="button.disabled" type="primary">
+                <span class="btn-text">{{ button.name }}</span>
+              </el-button>
+            </a>
+          </div> -->
+
+          <!-- <div class="news-alert-wrap">
+            <el-tag class="news-tag" size="small" type="warning" effect="dark">{{ news }}</el-tag>
+          </div> -->
+
+        </div>
       </el-col>
     </el-row>
-
-    <!-- 文章logo -->
-    <el-row v-if="logo" justify="center">
-      <el-image :src="logo" class="logo" fit="cover" />
-    </el-row>
-
-    <!-- 文章标题 -->
-    <el-row justify="center">
-      <el-col :span="20">
-        <h1 class="paper-title">
-          <span v-if="title" :style="{color:title_color}"> {{ title }}</span>
-          <span v-if="title_supp" :style="{color:title_supp_color}"> {{ title_supp }}</span>
-        </h1>
-      </el-col>
-    </el-row>
-
-    <!-- 作者名单 -->
-    <el-row justify="center">
-      <a :href=author.homepage v-for="author in authors">
-        <el-button class="title-button" type="primary" text>
-          <el-avatar v-if="author.icon" :size="40" :src="author.icon" />
-          <span class="author">
-            {{ author.name }}<sup v-if="author.address_flag" class="name_sup">{{ author.address_flag }}</sup>
-          </span>
-        </el-button>
-      </a>
-    </el-row>
-
-    <!-- 地址名单 -->
-    <el-row justify="center">
-      <a :href=address.homepage v-for="address in addresses">
-        <el-button class="title-button" type="primary" text>
-          <el-avatar v-if="address.icon" :size="40" :src="address.icon" />
-          <span class="address">
-            <sup v-if="address.address_flag" class="address_sup">{{ address.address_flag }}</sup>{{ address.name }}
-          </span>
-        </el-button>
-      </a>
-    </el-row>
-
-    <!-- 共一和通讯提示内容 -->
-    <el-row justify="center" class="con-cor">
-        {{ con_and_corresponding_author }}
-    </el-row>
-
-    <!-- 强调内容 -->
-    <el-row justify="center" class="emphasis" v-for="emphasis in emphases">
-        {{ emphasis }}
-    </el-row>
-
-    <!-- 提供引导按钮 -->
-    <el-row justify="center" style="margin-bottom: 20px;">
-      <el-col :span="20">
-        <el-row justify="center">
-          <a :href=button.link v-for="button in buttons">
-            <el-button class="guidance-button" size="default" :color="btn_color" :disabled="button.disabled" round>
-              <el-icon :size="18">
-                <component :is="button.component" />
-              </el-icon>
-              <span class="btn-text">{{ button.name }}</span>
-            </el-button>
-          </a>
-        </el-row>
-      </el-col>
-    </el-row>
-
   </div>
 </template>
 
 <style scoped>
+/* Hero Section Styles */
+.hero {
+  position: relative;
+  padding: 48px 0 36px;
+  background: linear-gradient(180deg, rgba(240,248,255,0.9), rgba(245,247,250,0.8));
+}
+.hero-inner {
+  padding: 18px;
+  border-radius: 12px;
+}
 
-/* 文章标题字体、字间距、居中排布、字号 */
+/* Title Styles */
 .paper-title {
-  font-family: "MyFont", Verdana, sans-serif;
-  letter-spacing: 2px;
-  font-size: 42px;
-  margin: 32px;
-  text-align: center;
+  font-family: "MyFont", "Times New Roman", Times, serif; /* 使用更正式的字体族 */
+  font-weight: 800; /* 加粗标题 */
+  letter-spacing: 0.5px;
+  font-size: 36px; /* 增大字号 */
+  margin: 0 auto 10px;
+  line-height: 1.2;
+  max-width: 900px;
+}
+.title-supp { 
+    margin: 0 0 16px; 
+    font-size: 18px;
+    font-weight: 500;
 }
 
-/* 姓名和地址按钮 */
-.title-button {
-  margin: 10px 3px;
-}
-
-/* 姓名和地址按钮光标悬浮 */
-.title-button:hover {
-  margin: 10px 8px;
-}
-
-/* 引导材料按钮 */
-.guidance-button {
-  margin: 8px 5px;
-  box-shadow: #d8d8d8 1px 1px 1px 1px;
-}
-
-/* 姓名属性 */
-.author {
+/* Author Styles */
+.authors-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
   font-size: 18px;
-  margin-left: 3px;
+  color: #374151; /* Darker text */
 }
-
-/* 姓名上标属性 */
+.author-name {
+    font-weight: 500;
+    margin: 0 4px;
+}
+.author-separator {
+    margin-right: 4px;
+    font-weight: 400;
+}
 .name_sup {
   color: #606266; 
-  margin-left: 3px;
+  font-size: 0.7em;
+  vertical-align: super;
+  margin-left: 2px;
+  font-weight: bold;
 }
 
-/* 地址属性 */
-.address {
-  font-size: 18px;
+/* Affiliation/Address Styles */
+.addresses { 
+    margin-top: 10px; 
+    display:flex; 
+    justify-content: center;
+    gap: 8px; 
+    flex-wrap:wrap; 
 }
-
-/* 地址上标属性 */
+.address-tag { 
+    background: #f3f4f6; /* Light background */
+    color:#4b5563; 
+    border: 1px solid #d1d5db;
+    font-size: 13px;
+    padding: 0 8px;
+    height: 28px;
+    line-height: 26px;
+}
 .address_sup {
   color: #606266; 
-  margin-right: 1px;
-}
-
-/* 头像属性 */
-.el-avatar {
-  margin-right: 6px;
-  box-shadow: #b7b7b7 0px 0px 3px 1px;
-}
-
-/* 共一和通讯文字属性 */
-.con-cor {
-  font-family: Arial;
-  font-size: 14px;
-  margin: 18px 0px;
-  text-align: center;
-}
-
-/* 强调信息属性 */
-.emphasis {
-  color: chocolate;
+  margin-right: 3px;
   font-weight: bold;
-  margin: 8px;
-  font-size: 22px;
-  text-align: center;
 }
 
-/* 引导材料按钮文字属性 */
-.btn-text {
-  font-size: 18px;
-  color: #ffffff;
+/* Legend/Notes */
+.con-cor {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  margin: 18px 0 10px;
 }
 
-.el-alert {
-  margin: 10px 0 0;
+/* Actions/Buttons */
+.actions {
+  margin-top: 20px;
 }
-
-.el-alert:first-child {
-  margin: 0;
-}
-
-.logo {
-  width: 150px; 
-  height: 150px;
-  border-radius: 50%;
-  box-shadow: #ced3dc 0px 0px 3px 2px;
-  margin-top: 40px;
-}
-
-/* 手机端链接样式处理 */
-a:-webkit-any-link {
+.actions a {
   text-decoration: none;
+  margin: 0 8px;
+}
+.btn-text {
+  font-size: 16px;
+  font-weight: 600;
+}
+.el-button--large {
+  padding: 12px 20px;
 }
 
-/* 取消鼠标焦点悬浮在链接上的颜色装饰 */
-a:hover {
-  color: inherit;
-  border-bottom: none;
+/* News Tag */
+.news-alert-wrap {
+    margin-top: 20px;
+}
+.news-tag {
+    font-size: 13px;
+    height: 28px;
+    line-height: 26px;
 }
 
-/* 链接装饰，取消下划线和链接颜色 */
-a {
-	text-decoration: None;
-	color: inherit;
+/* Utility */
+.text-center { text-align: center; }
+.divider-thin {
+    max-width: 300px;
+    margin: 20px auto;
 }
 
+/* Remove all other unnecessary styles */
+/* .logo, .logo-wrap, 
+.title-button, .title-button:hover, 
+.guidance-button, .el-avatar, 
+a:hover, a:-webkit-any-link, a { display logic removed in template }
+*/
 </style>

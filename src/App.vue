@@ -1,14 +1,12 @@
 <script>
 
-import Header from './components/Header.vue'
+// import Header from './components/Header.vue'
 import Main from './components/Main.vue'
-import Footer from './components/Footer.vue'
 
 export default {
   components: {
-    Header,
+    // Header,
     Main,
-    Footer,
   }
 }
 
@@ -18,9 +16,8 @@ export default {
     <div>
       
       <el-container>
-        <el-header><Header/></el-header>
+        <!-- <el-header><Header/></el-header> -->
         <el-main><Main/></el-main>
-        <el-footer><Footer/></el-footer>
       </el-container>
       
       <!-- 回到顶部 -->
@@ -43,13 +40,13 @@ h2, h3, h4, h5, h6 {
   letter-spacing: 2px;
 }
 
-.el-header {
+/* .el-header {
   padding: 0px;
-}
+} */
 
-.el-footer {
+/* .el-footer {
   padding: 0px;
-}
+} */
 
 p, li {
   font-size: 16px;
