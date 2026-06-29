@@ -121,7 +121,6 @@ export default defineComponent({
   position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 9;
   overflow: hidden;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   background-color: #f3f4f6; 
@@ -129,13 +128,8 @@ export default defineComponent({
 
 .img-crop .clipped-img {
   display: block;
-  width: 138%;
-  max-width: none;
-  height: 138%;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  width: 100%;
+  height: auto;
   object-fit: contain;
 }
 </style>
