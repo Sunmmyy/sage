@@ -13,7 +13,7 @@ export default defineComponent({
       <el-col :xs="24" :sm="20" :md="16" :lg="12" :xl="12">
         
         <h2 class="text-4xl font-extrabold mb-12 text-center text-gray-800">
-          How It Works: The SAGE Framework
+          Methodology: The SAGE Framework
         </h2>
 
         <div class="mb-14">
@@ -34,46 +34,52 @@ export default defineComponent({
           <div class="method-card">
             <h3 class="text-2xl font-bold mb-3 text-indigo-700">1. Analytic Concept Initialization (t=0)</h3>
             <p class="text-gray-700 mb-4 border-l-4 border-indigo-300 pl-3">
-              At <VueLatex expression="t=0" />, we leverage Vision Foundation Models (VFMs) like VGGT and SAM to estimate initial kinematic (<VueLatex expression="P_k^0" />) and structural (<VueLatex expression="P_s" />) **Analytic Concepts**.
+              Given the initial image and task instruction, a VLM identifies the task-relevant object and SAM segments an object-centric observation. VGGT extracts 3D-aware features, while a VLM-driven Concept Constructor instantiates the corresponding Manipulation Blueprint.
             </p>
             <ul class="list-disc list-inside text-gray-600 space-y-2 pl-3">
-              <li><strong>Structural Blueprints:</strong> Define the object's inherent spatial structure (e.g., hinge axis or rotational center).</li>
-              <li><strong>Manipulation Blueprints:</strong> Define task-specific affordances and interaction routines.</li>
+              <li><strong>Structural parameters <VueLatex expression="P_s" />:</strong> time-invariant geometry and kinematic structure, such as a hinge axis or sliding track.</li>
+              <li><strong>Initial kinematic state <VueLatex expression="P_k^0" />:</strong> the initial state of movable components, estimated by fitting the blueprint to the observed object.</li>
             </ul>
           </div>
 
           <div class="method-card">
             <h3 class="text-2xl font-bold mb-3 text-indigo-700">2. Dynamic Parameter Tracking (t > 0)</h3>
             <p class="text-gray-700 mb-4 border-l-4 border-indigo-300 pl-3">
-              During interaction (<VueLatex expression="t > 0" />), the **Concept Expert** actively tracks the object's kinematic state (<VueLatex expression="P_k^t" />) using a Feature Alignment mechanism.
+              During interaction, an Adapter maps intermediate VLA features into the VGGT spatial feature space. A Dynamic Parameter Head continuously estimates <VueLatex expression="P_k^t" />, with object-centric cross-attention improving sensitivity to boundaries and kinematic changes.
             </p>
             <div class="bg-indigo-100 p-4 rounded-lg text-sm font-mono text-indigo-900 overflow-x-auto shadow-inner">
-              <span class="font-semibold text-gray-800">Feature Alignment Loss:</span>
-              <VueLatex expression="\mathcal{L}_{align} = \mathbb{E}_{o_t}[1 - S_{cos}(Adapter(F_{VLA}), F_{Expert})]" display-mode />
+              <span class="font-semibold text-gray-800">Feature Alignment:</span>
+              <VueLatex expression="\mathcal{L}_{align}=\mathbb{E}_{o^{vis}}\left[\mathcal{S}_{cos}(\mathrm{Adapter}(\mathbf{F}_{VLA}),\mathbf{F}_{VGGT})\right]" display-mode />
             </div>
             <p class="text-xs text-gray-500 mt-2 pl-3">
-                This mechanism bridges VLA internal features (<VueLatex expression="F_{VLA}" />) with the high-level Concept Expert features (<VueLatex expression="F_{Expert}" />).
+                This alignment encourages the VLA representation to encode the explicit geometry and physical dynamics needed for manipulation.
             </p>
           </div>
         </div>
         
         <div class="method-card md:col-span-2">
-            <h3 class="text-2xl font-bold mb-5 text-indigo-700">3. Explicit Knowledge Injection & Fine-Tuning</h3>
+            <h3 class="text-2xl font-bold mb-5 text-indigo-700">3. Explicit Knowledge Injection and VLA Fine-Tuning</h3>
             <div class="grid md:grid-cols-2 gap-6">
                 
                 <div class="p-4 bg-white rounded-lg border border-gray-200 shadow-md">
-                    <h4 class="font-bold text-xl mb-2 text-green-700">Kinematic Constraint Supervision (<VueLatex expression="\mathcal{L}_{kin}" />)</h4>
+                    <h4 class="font-bold text-xl mb-2 text-green-700">Kinematic Constraint Supervision (<VueLatex expression="\mathcal{L}_{kcs}" />)</h4>
                     <p class="text-gray-700">
-                        A supervised loss that forces the VLA's predicted action direction <VueLatex expression="v_{a_t}" /> to align with the physically valid constraint vector <VueLatex expression="v^*_t" /> derived directly from the Analytic Blueprints. This ensures spatial correctness.
+                        The Concept Expert derives an optimal 3D interaction direction <VueLatex expression="\boldsymbol{v}^*" /> from the current Analytic Concept. A cosine-distance loss aligns the translational action direction with this physically valid reference.
                     </p>
+                    <VueLatex expression="\mathcal{L}_{kcs}=\mathbb{E}\left[1-\frac{\boldsymbol{v}_{\boldsymbol{a}_t}\cdot\boldsymbol{v}_t^*}{\|\boldsymbol{v}_{\boldsymbol{a}_t}\|\,\|\boldsymbol{v}_t^*\|}\right]" display-mode />
                 </div>
 
                 <div class="p-4 bg-white rounded-lg border border-gray-200 shadow-md">
                     <h4 class="font-bold text-xl mb-2 text-green-700">Concept Derived Rewards (<VueLatex expression="\mathcal{R}_{AC}" />)</h4>
                     <p class="text-gray-700">
-                        Provides dense, non-sparse rewards composed of kinematic progress and affordance alignment signals. This is used for Contrastive Learning (CQL) fine-tuning, drastically improving sample efficiency.
+                        For RL fine-tuning, SAGE combines a kinematic progress reward with an affordance alignment reward. The former measures progress toward the target state; the latter measures the 6D pose distance between the end effector and concept-derived grasp poses.
                     </p>
+                    <VueLatex expression="\mathcal{R}_{AC}=w_{prog}\phi_{prog}+w_{afford}\phi_{afford}" display-mode />
                 </div>
+            </div>
+            <div class="objective">
+              <strong>Total objective:</strong>
+              <VueLatex expression="\mathcal{L}_{total}=\mathcal{L}_{task}+\lambda_k\mathcal{L}_{kcs}+\lambda_a\mathcal{L}_{align}" display-mode />
             </div>
         </div>
       </el-col>
@@ -101,31 +107,29 @@ export default defineComponent({
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 }
 
+.objective {
+  margin-top: 24px;
+  padding: 18px;
+  border-radius: 12px;
+  background: #eef2ff;
+  color: #312e81;
+}
+
 /* Base Image Crop/Zoom CSS (Retained but simplified structure) */
 .img-crop {
- border-radius: 16px;
+  border-radius: 16px;
   position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 9; /* Define a wide aspect ratio for the overview */
-  overflow: hidden; 
+  overflow: hidden;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   background-color: #f3f4f6; 
 }
 
-/* Zoom Crop Strategy: Preserving the complex cropping logic provided by the user */
 .img-crop .clipped-img {
   display: block;
-  width: 180%; 
-  max-width: none;
-  
-  /* Horizontal Crop (Centering) */
-  margin-left: -34%;
-  
-  /* Vertical Crop */
-  margin-top: -31%;    
-  margin-bottom: -15%; 
-  
-  object-fit: cover;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 </style>

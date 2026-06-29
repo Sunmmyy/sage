@@ -5,7 +5,7 @@
 const logo = ''
 
 // 标题
-const title = 'Explicit Spatial Guidance from Object-Centric Concept Analysis for Vision-Language-Action Model Fine-Tuning'
+const title = 'Explicit Kinematic Guidance from Analytic Concepts for Vision-Language-Action Models'
 
 // 标题颜色
 const title_color = '#1f2937' // 更深的颜色，突出标题
@@ -23,39 +23,38 @@ const btn_color = '#444444'
 const authors = [
   {
     name: "Mingyang Sun",
-    address_flag: "1,4",
+    address_flag: "1,2,4",
     is_corresponding: false,
-    // is_equal: true // 假设 Mingyang Sun 是共一
   },
   {
-    name: "Qichen He",
-    address_flag: "2,4",
+    name: "Jiude Wei",
+    address_flag: "5",
     is_corresponding: false,
-    // is_equal: true // 假设 Qichen He 是共一
   },
   {
     name: "Xiujian Liang",
-    address_flag: "3,4",
+    address_flag: "2,3",
     is_corresponding: false,
-    is_equal: false
+  },
+  {
+    name: "Qichen He",
+    address_flag: "2,5",
+    is_corresponding: false,
   },
   {
     name: "Donglin Wang",
-    address_flag: "1",
+    address_flag: "4",
     is_corresponding: false,
-    is_equal: false
   },
   {
     name: "Cewu Lu",
-    address_flag: "2,4",
+    address_flag: "2,5",
     is_corresponding: false,
-    is_equal: false
   },
   {
     name: "Jianhua Sun",
-    address_flag: "2",
-    is_corresponding: true, // 假设 Jianhua Sun 是通讯作者
-    is_equal: false
+    address_flag: "5",
+    is_corresponding: true,
   },
 ]
 
@@ -63,19 +62,23 @@ const authors = [
 const addresses = [
   {
     address_flag: "1",
-    name: "Westlake University",
+    name: "Zhejiang University, Hangzhou, China",
   },
   {
     address_flag: "2",
-    name: "Shanghai Jiao Tong University",
+    name: "Shanghai Innovation Institute, Shanghai, China",
   },
   {
     address_flag: "3",
-    name: "Fudan University",
+    name: "Fudan University, Shanghai, China",
   },
   {
     address_flag: "4",
-    name: "Shanghai Innovation Institute",
+    name: "Westlake University, Hangzhou, China",
+  },
+  {
+    address_flag: "5",
+    name: "Shanghai Jiao Tong University, Shanghai, China",
   },
 ]
 
@@ -92,8 +95,10 @@ const getSuperscript = (author) => {
     return sup;
 }
 
-const con_and_corresponding_author = 
-  "#: Equal Contribution. *: Corresponding Author."
+const emails = [
+  "sunmingyang@zju.edu.cn",
+  "gothic@sjtu.edu.cn",
+]
 
 // 提供引导资料链接
 const buttons = [
@@ -146,8 +151,11 @@ const news = "🔥 [2024-12-15] This template project is still under development
             </template>
           </div>
 
-          <!-- <p class="con-cor text-gray-500 font-medium">{{ con_and_corresponding_author }}</p>
-           -->
+          <p class="emails">
+            <a v-for="(email, idx) in emails" :key="email" :href="`mailto:${email}`">
+              {{ email }}<span v-if="idx < emails.length - 1">, </span>
+            </a>
+          </p>
           <!-- <el-divider class="divider-thin" />
 
           <div class="actions">
@@ -206,7 +214,7 @@ const news = "🔥 [2024-12-15] This template project is still under development
   color: #374151; /* Darker text */
 }
 .author-name {
-    font-weight: 500;
+    font-weight: 700;
     margin: 0 4px;
 }
 .author-separator {
@@ -244,11 +252,17 @@ const news = "🔥 [2024-12-15] This template project is still under development
   font-weight: bold;
 }
 
-/* Legend/Notes */
-.con-cor {
-  font-family: Arial, sans-serif;
+.emails {
+  margin: 12px 0 0;
   font-size: 14px;
-  margin: 18px 0 10px;
+}
+.emails a {
+  color: #4b5563;
+  text-decoration: none;
+}
+.emails a:hover {
+  color: #2563eb;
+  text-decoration: underline;
 }
 
 /* Actions/Buttons */

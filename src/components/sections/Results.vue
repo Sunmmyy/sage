@@ -40,14 +40,7 @@ const tableDataSimplerEnv = [
     row_class: '' 
   },
   { 
-    model: 'SpatialVLA', 
-    va_pick: 89.5, va_move: 71.7, va_drawer: 68.8, 
-    vm_pick: 81.0, vm_move: 69.6, vm_drawer: 59.3, 
-    avg: 67.9, 
-    row_class: '' 
-  },
-  { 
-    model: 'SpatialVLA(FT)', 
+    model: 'SpatialVLA(FT)*', 
     va_pick: 88.0, va_move: 72.7, va_drawer: 41.8, 
     vm_pick: 86.0, vm_move: 77.9, vm_drawer: 57.4, 
     avg: 70.6, 
@@ -58,14 +51,20 @@ const tableDataSimplerEnv = [
     va_pick: 75.2, va_move: 63.7, va_drawer: 25.6, 
     vm_pick: 72.7, vm_move: 65.3, vm_drawer: 38.3, 
     avg: 56.8, 
-    row_class: '' 
+    row_class: 'highlight-mid' 
   },
-  // --- Mid-rule separation ---
+  {
+    model: '+SAGE-SFT',
+    va_pick: 88.0, va_move: 70.8, va_drawer: 33.3,
+    vm_pick: 76.4, vm_move: 73.6, vm_drawer: 55.6,
+    avg: 66.3,
+    row_class: 'highlight-sage'
+  },
   { 
-    model: 'OpenVLA-OFT(FT)', 
+    model: 'OpenVLA-OFT', 
     va_pick: 65.3, va_move: 59.0, va_drawer: 12.2, 
     vm_pick: 72.3, vm_move: 69.6, vm_drawer: 47.2, 
-    avg: 66.0, 
+    avg: 54.3, 
     row_class: 'highlight-mid' 
   }, 
   { 
@@ -88,41 +87,36 @@ const tableDataSimplerEnv = [
 const tableDataRealWorld = [
   { 
     task: 'Place the stapler in the lower drawer', 
-    pi_baseline: '12/20', 
-    pi_sage: '17/20', 
+    pi_baseline: '60%', 
+    pi_sage: '85%', 
   },
   { 
     task: 'Place the cube in the kitchen pot', 
-    pi_baseline: '15/20', 
-    pi_sage: '18/20', 
+    pi_baseline: '75%', 
+    pi_sage: '90%', 
   },
   { 
     task: 'Place the bowl in the microwave', 
-    pi_baseline: '10/20', 
-    pi_sage: '16/20', 
+    pi_baseline: '50%', 
+    pi_sage: '80%', 
+  },
+  {
+    task: 'Place the green cube on the plate',
+    pi_baseline: '90%',
+    pi_sage: '100%',
+  },
+  {
+    task: 'Stack blue bowl on middle then stack the pink bowl',
+    pi_baseline: '60%',
+    pi_sage: '90%',
   },
 ]
 
-// --- 3. Reinforcement Learning Summary ---
-const tableDataRL = [
-  {
-    experiment: 'CQL Fine-tune',
-    reward: 'Analytic Concept Reward',
-    avg_return: 123.4,
-    success: '72/100'
-  },
-  {
-    experiment: 'Behavioral Cloning',
-    reward: 'Imitation',
-    avg_return: 98.1,
-    success: '58/100'
-  },
-  {
-    experiment: 'PPO Baseline',
-    reward: 'Shaped Reward',
-    avg_return: 110.7,
-    success: '65/100'
-  },
+const tableDataAblation = [
+  { setting: 'sage', ppo: '0.91', grpo: '0.79' },
+  { setting: 'without_alignment', ppo: '0.86', grpo: '0.75' },
+  { setting: 'kinematic_gt', ppo: '0.94', grpo: '0.82' },
+  { setting: 'kinematic_structural_gt', ppo: '0.93', grpo: '0.84' },
 ]
 
 
@@ -150,7 +144,7 @@ const tableRowClassName = ({ row }) => {
       <el-col :xs="24" :sm="24" :md="22" :lg="20" :xl="18">
         <el-card class="card">
           <p class="mb-4 text-gray-700">
-            We evaluated the SAGE framework, focusing on its performance gain on **SimplerEnv** tasks and its superior **Qualitative Results** in complex manipulation.
+            We evaluate SAGE in offline learning, online reinforcement learning, and real-world manipulation. Across these settings, explicit concept guidance improves both success rate and learning efficiency.
           </p>
 
           <el-tabs class="demo-tabs" model-value="SimplerEnv">
@@ -211,6 +205,9 @@ const tableRowClassName = ({ row }) => {
                   </el-table-column>
                 </el-table>
               </div>
+              <p class="result-note">
+                On OpenVLA-OFT, SAGE-SFT raises average success from 54.3% to 69.0%, while SAGE-CQL reaches 71.7%. The gain is especially pronounced on the kinematically demanding Open/Close Drawer task. “FT” denotes fine-tuning; * marks a method designed specifically for 3D inputs.
+              </p>
 
               <!-- <p class="text-sm text-gray-500 mt-4">
                 The results are based on the Google Robot setup. **FT** denotes fine-tuned models. 
@@ -218,8 +215,11 @@ const tableRowClassName = ({ row }) => {
               </p> -->
             </el-tab-pane>
 
-<el-tab-pane label="Reinforcement Learning" name="RL">
+            <el-tab-pane label="Reinforcement Learning" name="RL">
               <h3 class="text-xl font-semibold mb-6 text-blue-600">Online Reinforcement Learning Results</h3>
+              <p class="result-note mb-5">
+                On the Open Drawer task, SAGE-enhanced PPO and GRPO converge faster and achieve higher final success rates. Across six ShapeNet-Mobility tasks—Faucet, Microwave, Laptop, StorageFurniture, KitchenPot, and Bucket—both SAGE variants consistently outperform their original baselines.
+              </p>
               <el-row gutter="20" class="mb-4">
                 <el-col :xs="24" :sm="24" :md="12">
                   <div class="text-center rl-image-container p-4 border rounded-lg shadow-sm bg-white">
@@ -241,11 +241,35 @@ const tableRowClassName = ({ row }) => {
                   </div>
                 </el-col>
               </el-row>
-            
+              <h4 class="font-bold text-lg mb-3 text-gray-800">Ablation Study on Open Drawer</h4>
+              <el-table :data="tableDataAblation" class="ablation-table">
+                <el-table-column prop="setting" label="Setting" min-width="250">
+                  <template #default="{ row }">
+                    <span v-if="row.setting === 'sage'">SAGE</span>
+                    <span v-else-if="row.setting === 'without_alignment'">
+                      w/o <VueLatex expression="\mathcal{L}_{align}" />
+                    </span>
+                    <span v-else-if="row.setting === 'kinematic_gt'">
+                      w. <VueLatex expression="P_k^{t*}" />
+                    </span>
+                    <span v-else>
+                      w. <VueLatex expression="P_k^{t*}+P_s^*" />
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="ppo" label="PPO" align="center" />
+                <el-table-column prop="grpo" label="GRPO" align="center" />
+              </el-table>
+              <p class="result-note">
+                Removing feature alignment reduces performance. Ground-truth kinematic or structural parameters provide only marginal gains, indicating that SAGE’s estimated parameters are already sufficiently accurate for policy learning.
+              </p>
             </el-tab-pane>
 
             <el-tab-pane label="Real-World Validation" name="Qualitative">
-              <h3 class="text-xl font-semibold mb-6 text-blue-600">Real-World Evaluation Results (Success Rate out of 20)</h3>
+              <h3 class="text-xl font-semibold mb-6 text-blue-600">Real-World Evaluation Results (20 Trials per Task)</h3>
+              <p class="result-note mb-5">
+                We evaluate π₀.₅ and π₀.₅ + SAGE-SFT on an AGILE PiPER dual-arm robot with Orbbec DABAI cameras. SAGE improves success across all five manipulation tasks.
+              </p>
               
               <div class="mb-10">
                   <!-- <h4 class="font-bold mb-3 text-lg">Real-World Evaluation Results (Success Rate out of 20)</h4> -->
@@ -256,8 +280,8 @@ const tableRowClassName = ({ row }) => {
                       :row-class-name="() => 'highlight-realworld-row'"
                   >
                       <el-table-column prop="task" label="Task Description" min-width="250" />
-                      <el-table-column prop="pi_baseline" label="Baseline ($\pi_{0.5}$)" align="center" width="150" />
-                      <el-table-column prop="pi_sage" label="SAGE ($\pi_{0.5}$+SAGE)" align="center" width="150">
+                      <el-table-column prop="pi_baseline" label="π₀.₅" align="center" width="150" />
+                      <el-table-column prop="pi_sage" label="π₀.₅ + SAGE" align="center" width="150">
                           <template #default="{ row }">
                               <span class="font-bold text-green-700">
                                   {{ row.pi_sage }}
@@ -287,6 +311,16 @@ const tableRowClassName = ({ row }) => {
   margin-top: 20px;
   border-radius: 12px;
   overflow: hidden; /* Ensure card content respects border-radius */
+}
+
+.result-note {
+  margin-top: 16px;
+  color: #4b5563;
+  line-height: 1.7;
+}
+
+.ablation-table {
+  margin-top: 12px;
 }
 
 /* Custom row classes for highlighting SimplerEnv results */
